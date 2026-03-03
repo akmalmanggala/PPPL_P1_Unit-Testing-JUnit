@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Wallet {
-    private String owner;
+    private Owner owner;
     private List<String> cards = new ArrayList<>();
     private List<Integer> cash = new ArrayList<>();
 
-    public void setOwner(String owner){
+    public void setOwner(Owner owner){
         this.owner = owner;
     }
 
-    public String getOwner(){
+    public Owner getOwner(){
         return owner;
     }
 
@@ -32,17 +32,23 @@ public class Wallet {
         return cards.size();
     }
 
-    public void addCash(int amount){
-        cash.add(amount);
-    }
-
-    public boolean removeCash(int amount){
-        int total = getTotalCash();
-        if (amount > total){
+    public boolean addCash(int amount){
+        if(amount < 0){
             return false;
         }
-        cash.add(-amount);
+        cash.add(amount);
         return true;
+    }
+
+    public void removeCash(int amount){
+        int total = getTotalCash();
+        if (amount <= 0){
+            throw new IllegalArgumentException("IllegalArgumentException");
+        }
+        if (amount > total){
+            throw new RuntimeException("InsufficientFundsException");
+        }
+        cash.add(-amount);
     }
 
     public int getTotalCash(){
@@ -53,4 +59,11 @@ public class Wallet {
         return total;
     }
 
+    public void clearCards() {
+        this.cards.clear();
+    }
+
+    public void clearCash() {
+        this.cash.clear();
+    }
 }
